@@ -4,7 +4,7 @@ const readline = require('readline');
 
 const STARTING_FREQUENCY = 0;
 
-const INPUT_DATA_PATH = path.resolve(__dirname, '../../data/puzzle-1.dat');
+const INPUT_DATA_PATH = path.resolve(__dirname, '../../inputs/day-1.dat');
 
 let frequencies = [STARTING_FREQUENCY];
 
