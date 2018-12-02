@@ -1,33 +1,21 @@
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+const Solution = require('../../../utils/solution.class');
 
-const INPUT_DATA_PATH = path.resolve(__dirname, '../../../inputs/day-2.dat');
+const day = 2;
 
-const containerIds = [];
-const foundIds = [];
+const dayTwoPartTwo = new Solution({ day });
 
-function addIdToArray(id) {
-  containerIds.push(id);
-}
+dayTwoPartTwo.data.then((data) => {
+  const foundIds = [];
 
-function displayResult() {
-  const secondIdArray = foundIds[1].split('');
+  console.log('Processing data...');
 
-  const matching = foundIds[0].split('').filter((character, index) => secondIdArray[index] === character).join('');
-
-  console.log('MATCHING CHARACTERS:', matching);
-}
-
-function processIds() {
-  containerIds.some((firstId) => {
-    return containerIds.some((secondId) => {
+  data.some((firstId) => {
+    return data.some((secondId) => {
       if (firstId !== secondId) {
         const firstIdArray = firstId.split('');
         const secondIdArray = secondId.split('');
 
         let mismatches = 0;
-        let match = false;
 
         firstIdArray.forEach((character, index) => {
           if (character !== secondIdArray[index]) {
@@ -48,20 +36,11 @@ function processIds() {
     });
   });
 
-  displayResult();
+  const secondIdArray = foundIds[1].split('');
+
+  const matching = foundIds[0].split('').filter((character, index) => secondIdArray[index] === character).join('');
+
+  console.log('MATCHING CHARACTERS:', matching);
 
   process.exit(0);
-}
-
-function readIds() {
-  const read = readline.createInterface({
-    input: fs.createReadStream(INPUT_DATA_PATH),
-  });
-
-  read
-    .on('line', addIdToArray)
-    .on('close', processIds)
-  ;
-}
-
-readIds();
+});

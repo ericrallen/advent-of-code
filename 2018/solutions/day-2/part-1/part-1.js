@@ -1,20 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+const Solution = require('../../../utils/solution.class');
 
-const INPUT_DATA_PATH = path.resolve(__dirname, '../../../inputs/day-2.dat');
+const day = 2;
 
-const containerIds = [];
+const dayTwoPartOne = new Solution({ day });
 
-const idsWithTwoRepeats = [];
-const idsWithThreeRepeats = [];
-
-function addIdToArray(id) {
-  containerIds.push(id);
-}
-
-function getCharacterCounts() {
-  return containerIds.map((id) => {
+function getCharacterCounts(ids) {
+  return ids.map((id) => {
     const characterArray = id.split('');
 
     const counts = characterArray.reduce((countObject, character) => {
@@ -34,18 +25,13 @@ function getCharacterCounts() {
   });
 }
 
-function displayResult() {
-  const result = idsWithTwoRepeats.length * idsWithThreeRepeats.length;
+dayTwoPartOne.data.then((data) => {
+  const idsWithTwoRepeats = [];
+  const idsWithThreeRepeats = [];
 
-  const displayCheckSumMath = `${idsWithTwoRepeats.length} * ${idsWithThreeRepeats.length} = ${result}`;
+  console.log('Processing data...');
 
-  console.log('CHECKSUM:', displayCheckSumMath);
-}
-
-function processIds() {
-  const idsWithCharacterCounts = getCharacterCounts();
-
-  idsWithCharacterCounts.forEach(({ id, counts }) => {
+  getCharacterCounts(data).forEach(({ id, counts }) => {
     const hasTwoRepeats = Object.entries(counts).filter(([character, count]) => count === 2).length >= 1;
     const hasThreeRepeats = Object.entries(counts).filter(([character, count]) => count === 3).length >= 1;
 
@@ -58,20 +44,11 @@ function processIds() {
     }
   });
 
-  displayResult();
+  const result = idsWithTwoRepeats.length * idsWithThreeRepeats.length;
+  
+  const displayCheckSumMath = `${idsWithTwoRepeats.length} * ${idsWithThreeRepeats.length} = ${result}`;
+
+  console.log('CHECKSUM:', displayCheckSumMath);
 
   process.exit(0);
-}
-
-function readIds() {
-  const read = readline.createInterface({
-    input: fs.createReadStream(INPUT_DATA_PATH),
-  });
-
-  read
-    .on('line', addIdToArray)
-    .on('close', processIds)
-  ;
-}
-
-readIds();
+});

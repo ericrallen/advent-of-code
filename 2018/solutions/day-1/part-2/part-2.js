@@ -2,9 +2,9 @@ const Solution = require('../../../utils/solution.class');
 
 const day = 1;
 
-const dayOnePartOne = new Solution({ day });
+const dayOnePartTwo = new Solution({ day });
 
-dayOnePartOne.data.then((data) => {
+dayOnePartTwo.data.then((data) => {
   let frequencies = [0];
 
   let foundFrequency;
