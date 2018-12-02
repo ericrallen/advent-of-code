@@ -1,0 +1,14 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "description": "Advent of Code solutions",
+  "main": "index.js",
+  "repository": "git@github.com:ericrallen/advent-of-code.git",
+  "author": "Eric Allen <decoy@internetalche.me>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^6.1.0"
+  }
+}

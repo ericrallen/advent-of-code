@@ -1,38 +1,21 @@
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+const Solution = require('../../../utils/solution.class');
 
-const STARTING_FREQUENCY = 0;
+const day = 1;
 
-const INPUT_DATA_PATH = path.resolve(__dirname, '../../inputs/day-1.dat');
+const dayOnePartOne = new Solution({ day });
 
-const read = readline.createInterface({
-  input: fs.createReadStream(INPUT_DATA_PATH),
-});
+dayOnePartOne.data.then((data) => {
+  let frequency = 0;
 
-let frequency = STARTING_FREQUENCY;
+  console.log('Processing data...');
 
-function processFrequencyChange(change) {
-  const changeAmount = parseInt(change.trim(), 10);
+  data.forEach((change) => {
+    const changeAmount = parseInt(change.trim(), 10);
 
-  frequency = frequency + changeAmount;
-}
+    frequency = frequency + changeAmount;
+  });
 
-function getFinalFrequency() {
-  return frequency;
-}
-
-function displayFinalFrequency() {
-  console.log('FREQUENCY:', getFinalFrequency());
-}
-
-function finishProcess() {
-  displayFinalFrequency();
+  console.log('FREQUENCY:', frequency);
 
   process.exit(0);
-}
-
-read
-  .on('line', processFrequencyChange)
-  .on('close', finishProcess)
-;
+});

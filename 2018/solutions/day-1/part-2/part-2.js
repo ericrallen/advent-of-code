@@ -1,60 +1,41 @@
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+const Solution = require('../../../utils/solution.class');
 
-const STARTING_FREQUENCY = 0;
+const day = 1;
 
-const INPUT_DATA_PATH = path.resolve(__dirname, '../../inputs/day-1.dat');
+const dayOnePartOne = new Solution({ day });
 
-let frequencies = [STARTING_FREQUENCY];
+dayOnePartOne.data.then((data) => {
+  let frequencies = [0];
 
-function processFrequencyChange(change) {
-  const changeAmount = parseInt(change.trim(), 10);
+  let foundFrequency;
 
-  const lastFrequency = frequencies[frequencies.length - 1];
+  const iterateThroughFrequencies = (changes) => {
+    changes.some((change) => {
+      const changeAmount = parseInt(change.trim(), 10);
 
-  let frequency = lastFrequency + changeAmount;
+      const lastFrequency = frequencies[frequencies.length - 1];
 
-  if (frequencies.indexOf(frequency) !== -1) { 
-    frequencies.push(frequency);
+      let frequency = lastFrequency + changeAmount;
 
-    finishProcess(true);
-  } else {
-    frequencies.push(frequency);
+      if (frequencies.indexOf(frequency) !== -1) {
+        foundFrequency = frequency;
+
+        return true;
+      } else {
+        frequencies.push(frequency);
+
+        return false;
+      }
+    });
+  };
+
+  console.log('Processing data...');
+
+  while (!foundFrequency) {
+    iterateThroughFrequencies(data);
   }
-}
 
-function getFinalFrequency() {
-  return frequencies[frequencies.length - 1];
-}
+  console.log('FREQUENCY:', foundFrequency);
 
-function displayFinalFrequency() {
-  console.log('FREQUENCY:', getFinalFrequency());
-}
-
-function finishProcess(duplicateFound = false) {
-  if (duplicateFound) {
-    displayFinalFrequency();
-
-    process.exit(0);
-  } else {
-    round++;
-
-    readFrequency();
-  }
-}
-
-function readFrequency() {
-  const read = readline.createInterface({
-    input: fs.createReadStream(INPUT_DATA_PATH),
-  });
-
-  read
-    .on('line', processFrequencyChange)
-    .on('close', finishProcess)
-  ;
-}
-
-console.log('Processing data...');
-
-readFrequency();
+  process.exit(0);
+});
