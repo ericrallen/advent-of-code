@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const readline = require('readline');
 const axios = require('axios');
 
 require('dotenv').config();
@@ -28,21 +27,22 @@ class Solution {
       // let's also generate a fallback local path to the data that we've checked in
       this.inputDataPath = path.resolve(__dirname, `${inputPath}/${day}.dat`);
 
-      // if we have our session cookie in the .env file
-      if (process.env.SESSION) {
-        this.inputArray = this.requestInputData();
+      if (fs.existsSync(this.inputDataPath)) {
+        this.inputArray = this.readLocalInput();
       } else {
-        // we'll be returning a Promise when we use the URL request method
-        // so we're going to go ahead and return a Promise when we're reading
-        // the local filesystem, too so that it's always the same API that is
-        // exposed to our solutions
-        this.inputArray = new Promise((resolve) => resolve(this.readInputData()));
+        // if we have our session cookie in the .env file
+        if (process.env.SESSION) {
+          this.inputArray = this.requestInputData();
+
+          this.writeInputFile();
+        }
       }
     }
   }
 
   /**
    * Getter for end-user to get the actual input values
+   * 
    * @readonly
    * @memberof Solution
    */
@@ -51,7 +51,22 @@ class Solution {
   }
 
   /**
+   * Return a Promise that resolves to our input data
+   * 
+   * @memberof Solution
+   */
+  readLocalInput() {
+    // we'll be returning a Promise when we use the URL request method
+    // so we're going to go ahead and return a Promise when we're reading
+    // the local filesystem, too so that it's always the same API that is
+    // exposed to our solutions
+    return new Promise((resolve) => resolve(this.readInputData()));
+  }
+
+  /**
    * Retrieve input data from Advent of Code site
+   * 
+   * @memberof Solution
    */
   requestInputData() {
     return axios({
@@ -68,17 +83,28 @@ class Solution {
       // fallback to local filesystem on error
       .catch((error) => {
         console.error('CONNECTION ERROR:', error);
-
-        return this.readInputData();
       })
     ;
   }
 
   /**
    * Retrieve input data from local filesystem
+   * 
+   * @memberof Solution
    */
   readInputData() {
     return fs.readFileSync(this.inputDataPath, 'utf-8').split('\n');
+  }
+
+  /**
+   * Write retrieved input data to local filesystem
+   * 
+   * @memberof Solution
+   */
+  writeInputFile() {
+    this.data.then((data) => {
+      fs.writeFileSync(this.inputDataPath, data.join('\n'));
+    });
   }
 }
 
