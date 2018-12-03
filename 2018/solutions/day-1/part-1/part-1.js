@@ -1,18 +1,23 @@
 const Solution = require('../../../utils/solution.class');
 
 const day = 1;
+const part = 1;
 
-const dayOnePartOne = new Solution({ day });
+const puzzle = new Solution({ day });
 
-dayOnePartOne.data.then((data) => {
-  let frequency = 0;
-
+// resolve the Promise our Solution class has for it's `data` getter function
+puzzle.data.then((data) => {
+  console.log(`Advent of Code 2018 Day ${day}: Part ${part}`);
   console.log('Processing data...');
 
-  data.forEach((change) => {
-    const changeAmount = parseInt(change.trim(), 10);
+  // we start with the frequency at 0
+  let frequency = 0;
 
-    frequency = frequency + changeAmount;
+  data.forEach((change) => {
+    // because the values in our data are just String representations of integers
+    // prefixed with "+" or "-" we can parseInt() them to receive an Integer value
+    // that we can use for math
+    frequency = frequency + parseInt(change.trim(), 10);
   });
 
   console.log('FREQUENCY:', frequency);

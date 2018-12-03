@@ -18,17 +18,25 @@ class Solution {
   constructor({ inputPath = '../inputs', day = 0 }) {
     this.inputArray = [];
 
+    // if we don't know what day it is, we're not going to really have anything useful we can do
     if (day) {
       this.day = day;
 
+      // let's generate the URL on the website where we can find our data
       this.inputDataUrl = `${process.env.DOMAIN}/day/${day}/input`;
 
+      // let's also generate a fallback local path to the data that we've checked in
       this.inputDataPath = path.resolve(__dirname, `${inputPath}/${day}.dat`);
 
+      // if we have our session cookie in the .env file
       if (process.env.SESSION) {
         this.inputArray = this.requestInputData();
       } else {
-        this.inputArray = this.readInputData();
+        // we'll be returning a Promise when we use the URL request method
+        // so we're going to go ahead and return a Promise when we're reading
+        // the local filesystem, too so that it's always the same API that is
+        // exposed to our solutions
+        this.inputArray = new Promise((resolve) => resolve(this.readInputData()));
       }
     }
   }
@@ -39,9 +47,7 @@ class Solution {
    * @memberof Solution
    */
   get data () {
-    return new Promise((resolve) => {
-      resolve(this.inputArray);
-    });
+    return this.inputArray;
   }
 
   /**
