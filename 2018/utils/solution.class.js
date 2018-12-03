@@ -116,7 +116,7 @@ class Solution {
    */
   writeInputFile() {
     this.data.then((data) => {
-      fs.writeFile(this.inputDataPath, data.join('\n'));
+      fs.writeFileSync(this.inputDataPath, data.join('\n'));
     });
   }
 }

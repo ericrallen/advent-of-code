@@ -7,22 +7,25 @@ const puzzle = new Solution({ day, part });
 
 // resolve the Promise our Solution class has for it's `data` getter function
 puzzle.data.then((data) => {
+  const foundOverlaps = [];
+
   const claimRegEx = /#(\d+)\s@\s(\d+,\d+):\s(\d+x\d+)/;
 
-  const inRange = (value, min, max) => {
-    return (value >= min && value <= max);
-  }
+  const doesOverlap = (rectangleA, rectangleB, calculate = false) => {
+    const [ aId, aStartX, aStartY, aEndX, aEndY ] = rectangleA;
+    const [ bId, bStartX, bStartY, bEndX, bEndY ] = rectangleB;
 
-  const doesOverlap = (rectangleA, rectangleB) => {
-    const xOverlap = inRange(rectangleB[1], rectangleA[1], rectangleA[3]);
-    const yOverlap = inRange(rectangleB[2], rectangleA[2], rectangleA[4]);
+    const xOverlap = Math.max(0, Math.min(aEndX, bEndX) - Math.max(aStartX, bStartX));
+    const yOverlap = Math.max(0, Math.min(aEndY, bEndY) - Math.max(aStartY, bStartY));
 
-    if (xOverlap && yOverlap) {
-      return true;
+    if (calculate) {
+      foundOverlaps.push(`#${aId}|${bId}`);
+
+      return xOverlap * yOverlap;
     }
 
-    return false;
-  }
+    return xOverlap && yOverlap;
+  };
 
   const formattedClaims = data
     .map((claim) => {
@@ -41,27 +44,24 @@ puzzle.data.then((data) => {
     })
   ;
 
-  const test = formattedClaims
-    .map((claim) => {
-      const overlaps = [];
+  const overlappingArea = formattedClaims
+    .reduce((totalArea, claim) => {
+      // FIXME: need to account for multiple overlaps, probably need an entirely new approach
+      totalArea += formattedClaims.reduce((area, testClaim) => {
+        const checkForPreviouslyFoundOverlap = `#${testClaim[0]}|${claim[0]}`;
 
-      formattedClaims.forEach((testClaim) => {
-        if (claim[0] !== testClaim[0]) {
-          if (doesOverlap(claim, testClaim)) {
-            overlaps.push(claim, testClaim);
-          }
+        if (claim[0] !== testClaim[0] && doesOverlap(claim, testClaim) && foundOverlaps.indexOf(checkForPreviouslyFoundOverlap) === -1) {
+          area = area + doesOverlap(claim, testClaim, true);
         }
-      });
 
-      return overlaps;
-    })
-    .filter(overlaps => overlaps.length)
-    // TODO: get difference between overlaps B.start and A.end for x and y
-    //        then multiply the x overlap by the y overlap to get the square
-    //        inches of overlap and then add all the overlapping square inches
+        return area;
+      }, 0);
+
+      return totalArea;
+    }, 0)
   ;
 
-  console.log('OVERLAPS:', test);
+  console.log('OVERLAPPING AREA:', overlappingArea);
 
   process.exit(0);
 });
