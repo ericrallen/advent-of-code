@@ -3,12 +3,12 @@ const Solution = require('../../../utils/solution.class');
 const day = 1;
 const part = 2;
 
-const puzzle = new Solution({ day });
+const puzzle = new Solution({ day, part });
 
 // resolve the Promise our Solution class has for it's `data` getter function
 puzzle.data.then((data) => {
-  console.log(`Advent of Code 2018 Day ${day}: Part ${part}`);
-  console.log('Processing data...');
+  // inspired by:  https://github.com/chrisman/advent-of-code/blob/master/2018/day/0102.js#L8
+  console.time('Search Time');
 
   // we start with the frequency at 0
   let frequencies = [0];
@@ -54,6 +54,8 @@ puzzle.data.then((data) => {
   }
 
   console.log('FREQUENCY:', foundFrequency);
+
+  console.timeEnd('Search Time');
 
   process.exit(0);
 });

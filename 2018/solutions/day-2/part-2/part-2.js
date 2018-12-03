@@ -3,12 +3,9 @@ const Solution = require('../../../utils/solution.class');
 const day = 2;
 const part = 2;
 
-const puzzle = new Solution({ day });
+const puzzle = new Solution({ day, part });
 
 puzzle.data.then((data) => {
-  console.log(`Advent of Code 2018 Day ${day}: Part ${part}`);
-  console.log('Processing data...');
-
   // we'll use this to store the IDs we find that only differ by one character
   let matchingCharacters = '';
 

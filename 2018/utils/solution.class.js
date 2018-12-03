@@ -13,16 +13,25 @@ class Solution {
    * @param {Object} options configuration object used for instantiating our class
    * @param {String} options.inputPath relative path from the current script to where our input data lives
    * @param {Number} options.day which Advent of Code day is this puzzle for
+   * @param {Number} options.part which part of the day's puzzle are we solving
    */
-  constructor({ inputPath = '../inputs', day = 0 }) {
+  constructor({ inputPath = '../inputs', day = 0, part = 0, year = 0 }) {
     this.inputArray = [];
 
     // if we don't know what day it is, we're not going to really have anything useful we can do
     if (day) {
       this.day = day;
 
+      if (part) {
+        this.part = part;
+      }
+
+      this.year = year || process.env.YEAR;
+
+      const welcomeMessage = `Advent of Code ${this.year} Day ${day}${(part) ? `: Part ${part}` : ''}`;
+
       // let's generate the URL on the website where we can find our data
-      this.inputDataUrl = `${process.env.DOMAIN}/day/${day}/input`;
+      this.inputDataUrl = `${process.env.DOMAIN}/${this.year}/day/${day}/input`;
 
       // let's also generate a fallback local path to the data that we've checked in
       this.inputDataPath = path.resolve(__dirname, `${inputPath}/${day}.dat`);
@@ -37,6 +46,8 @@ class Solution {
           this.writeInputFile();
         }
       }
+
+      console.log(welcomeMessage);
     }
   }
 
@@ -47,6 +58,8 @@ class Solution {
    * @memberof Solution
    */
   get data () {
+    console.log('Processing data...');
+
     return this.inputArray;
   }
 
@@ -103,7 +116,7 @@ class Solution {
    */
   writeInputFile() {
     this.data.then((data) => {
-      fs.writeFileSync(this.inputDataPath, data.join('\n'));
+      fs.writeFile(this.inputDataPath, data.join('\n'));
     });
   }
 }

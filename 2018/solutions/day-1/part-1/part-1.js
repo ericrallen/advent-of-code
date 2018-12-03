@@ -3,13 +3,10 @@ const Solution = require('../../../utils/solution.class');
 const day = 1;
 const part = 1;
 
-const puzzle = new Solution({ day });
+const puzzle = new Solution({ day, part });
 
 // resolve the Promise our Solution class has for it's `data` getter function
 puzzle.data.then((data) => {
-  console.log(`Advent of Code 2018 Day ${day}: Part ${part}`);
-  console.log('Processing data...');
-
   // we start with the frequency at 0
   let frequency = 0;
 
