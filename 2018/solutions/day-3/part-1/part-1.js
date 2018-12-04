@@ -7,61 +7,68 @@ const puzzle = new Solution({ day, part });
 
 // resolve the Promise our Solution class has for it's `data` getter function
 puzzle.data.then((data) => {
-  const foundOverlaps = [];
+  // our "claims" are in the following format `#1 @ 1,1 1x1`
+  const claimRegEx = /#(\d+)\s@\s(\d+),(\d+):\s(\d+)x(\d+)/;
 
-  const claimRegEx = /#(\d+)\s@\s(\d+,\d+):\s(\d+x\d+)/;
+  // we'll use this to keep track of what coordinates already hit
+  const overlapMap = {};
 
-  const doesOverlap = (rectangleA, rectangleB, calculate = false) => {
-    const [ aId, aStartX, aStartY, aEndX, aEndY ] = rectangleA;
-    const [ bId, bStartX, bStartY, bEndX, bEndY ] = rectangleB;
+  // first let's take that awful data and put it in a format we can work with
+  const formattedClaims = data.map((claim) => {
+    // get the bits from our claim string by using our RegEx above
+    const [ originalClaim, id, xString, yString, widthString, heightString ] = claimRegEx.exec(claim);
 
-    const xOverlap = Math.max(0, Math.min(aEndX, bEndX) - Math.max(aStartX, bStartX));
-    const yOverlap = Math.max(0, Math.min(aEndY, bEndY) - Math.max(aStartY, bStartY));
+    // all the data we're reading in are Strings, so let's make them Integers real quick
+    const x = parseInt(xString, 10);
+    const y = parseInt(yString, 10);
+    const width = parseInt(widthString, 10);
+    const height = parseInt(heightString, 10);
 
-    if (calculate) {
-      foundOverlaps.push(`#${aId}|${bId}`);
+    return {
+      id,
+      start: {
+        x,
+        y,
+      },
+      end: {
+        x: x + width,
+        y: y + height
+      }
+    };
+  });
 
-      return xOverlap * yOverlap;
+  // iterate through our rectangles
+  formattedClaims.forEach((claim) => {
+    const {
+      start: {
+        x: startX,
+        y: startY,
+      },
+      end: {
+        x: endX,
+        y: endY,
+      },
+    } = claim;
+
+    // move through each set of x,y coordinates in this rectangle
+    for (let x = startX; x < endX; x++) {
+      for( let y = startY; y < endY; y++) {
+        // we're going to use `x,y` as our keys for keeping track of coordinate hits
+        const key = `${x},${y}`;
+
+        // keep track of how many times we've hit these coordinates
+        let hits = overlapMap[key] || 0;
+
+        // increment out hit count for these coordinates
+        overlapMap[key] = hits + 1;
+      }
     }
+  });
 
-    return xOverlap && yOverlap;
-  };
+  //remove any coordinates that we've only hit once and then we're left with the
+  const overlaps = Object.values(overlapMap).filter(hits => hits > 1).length;
 
-  const formattedClaims = data
-    .map((claim) => {
-      const [ originalClaim, id, startingCoordinates, dimensions ] = claimRegEx.exec(claim);
-
-      const [ xString, yString ] = startingCoordinates.split(',');
-
-      const [ widthString, heightString ] = dimensions.split('x');
-
-      const x = parseInt(xString, 10);
-      const y = parseInt(yString, 10);
-      const width = parseInt(widthString, 10);
-      const height = parseInt(heightString, 10);
-
-      return [id, x, y, x + width, y + height];
-    })
-  ;
-
-  const overlappingArea = formattedClaims
-    .reduce((totalArea, claim) => {
-      // FIXME: need to account for multiple overlaps, probably need an entirely new approach
-      totalArea += formattedClaims.reduce((area, testClaim) => {
-        const checkForPreviouslyFoundOverlap = `#${testClaim[0]}|${claim[0]}`;
-
-        if (claim[0] !== testClaim[0] && doesOverlap(claim, testClaim) && foundOverlaps.indexOf(checkForPreviouslyFoundOverlap) === -1) {
-          area = area + doesOverlap(claim, testClaim, true);
-        }
-
-        return area;
-      }, 0);
-
-      return totalArea;
-    }, 0)
-  ;
-
-  console.log('OVERLAPPING AREA:', overlappingArea);
+  console.log('OVERLAPPING AREA:', overlaps);
 
   process.exit(0);
 });
