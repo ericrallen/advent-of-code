@@ -3,7 +3,7 @@ const { DateTime } = require('luxon');
 const Solution = require('../../../utils/solution.class');
 
 const day = 4;
-const part = 1;
+const part = 2;
 
 const puzzle = new Solution({ day, part });
 
@@ -36,36 +36,46 @@ puzzle.data.then((data) => {
     return (status === 'falls asleep'); 
   };
 
-  const findSleepiestGuard = (sleepData) => {
-    const scoreBoard = Object.entries(sleepData).reduce((accumulatedSleep, [ date, guards ]) => {
-      Object.entries(guards).forEach(([ guardId, { total }]) => {
-        accumulatedSleep[guardId] = (accumulatedSleep[guardId] || 0) + total;
-      });
-
-      return accumulatedSleep;
-    }, {});
-
-    return Object.keys(scoreBoard).sort(
-      (guardA, guardB) => scoreBoard[guardB] - scoreBoard[guardA]
-    ) [0];
-  };
-
-  const findBestMinute = (guardId, sleepData) => {
-    const minutesAsleepFrequencies = Object.entries(sleepData).reduce((minutesAsleep, [ date, guards ]) => {
-      if (guards[guardId]) {
-        guards[guardId].schedule.forEach((asleep, minute) => {
+  const findSleepiestGuardForMinute = (sleepData) => {
+    const guardSleepByMinute = Object.entries(sleepData).reduce((minutesAsleep, [ date, guards ]) => {
+      const minutesByGuard = Object.entries(guards).reduce((guardSleep, [ guardId, { schedule }]) => {
+        schedule.forEach((asleep, minute) => {
           if (asleep) {
-            minutesAsleep[minute] = (minutesAsleep[minute]) ? minutesAsleep[minute] + 1 : 1;
+            guardSleep[guardId] = guardSleep[guardId] || {};
+            guardSleep[guardId][minute] = (guardSleep[guardId][minute]) ? guardSleep[guardId][minute] + 1 : 1;
           }
         });
-      }
 
-      return minutesAsleep;
+        return guardSleep;
+      }, minutesAsleep);
+
+      return minutesByGuard;
     }, {});
 
-    return Object.keys(minutesAsleepFrequencies).sort(
-      (frequencyA, frequencyB) => minutesAsleepFrequencies[frequencyB] - minutesAsleepFrequencies[frequencyA]
-    )[0];
+    const sleepiestGuardMinutes = Object.entries(guardSleepByMinute).reduce((sleepiestMinuteForAllGuards, [guardId, schedule]) => {
+      const sleepiestMinuteForThisGuard = Object.keys(schedule).sort(
+        (minuteA, minuteB) => schedule[minuteB] - schedule[minuteA]
+      )[0];
+
+      sleepiestMinuteForAllGuards[guardId] = {
+        minute: sleepiestMinuteForThisGuard,
+        timesAsleep: schedule[sleepiestMinuteForThisGuard]
+      };
+
+      return sleepiestMinuteForAllGuards;
+    }, {});
+
+    return Object.entries(sleepiestGuardMinutes).reduce((sleepiestGuardAndMinute, [ guardId, { minute, timesAsleep } ]) => {
+      if (sleepiestGuardAndMinute.timesAsleep) {
+        if (timesAsleep > sleepiestGuardAndMinute.timesAsleep) {
+          sleepiestGuardAndMinute = { guardId, minute, timesAsleep };
+        }
+      } else {
+        sleepiestGuardAndMinute = { guardId, minute, timesAsleep };
+      }
+
+      return sleepiestGuardAndMinute;
+    }, {});
   };
 
   const formattedAndSortedEntries = data
@@ -157,13 +167,11 @@ puzzle.data.then((data) => {
     return trackingObject;
   }, {});
 
-  const guard = findSleepiestGuard(formattedSleepSchedules);
+  const { guardId, minute } = findSleepiestGuardForMinute(formattedSleepSchedules);
 
-  const minute = findBestMinute(guard, formattedSleepSchedules);
+  const result = guardId * minute;
 
-  const result = guard * minute;
-
-  const display = `${guard} * ${minute} = ${result}`;
+  const display = `${guardId} * ${minute} = ${result}`;
 
   console.log('SLEEPY GUARD:', display);
 });
