@@ -9,10 +9,11 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
-    "dotenv": "^6.1.0"
+    "dotenv": "^6.1.0",
+    "luxon": "^1.8.2"
   },
   "scripts": {
-    "2018": "yarn 2018:day-1 && yarn 2018:day-2 && yarn 2018:day-3",
+    "2018": "yarn 2018:day-1 && yarn 2018:day-2 && yarn 2018:day-3 && 2018:day-4",
     "2018:day-1": "yarn 2018:day-1:part-1 && yarn 2018:day-1:part-2",
     "2018:day-1:part-1": "node ./2018/solutions/day-1/part-1/part-1.js",
     "2018:day-1:part-2": "node ./2018/solutions/day-1/part-2/part-2.js",
@@ -21,6 +22,9 @@
     "2018:day-2:part-2": "node ./2018/solutions/day-2/part-2/part-2.js",
     "2018:day-3": "yarn 2018:day-3:part-1 && yarn 2018:day-3:part-2",
     "2018:day-3:part-1": "node ./2018/solutions/day-3/part-1/part-1.js",
-    "2018:day-3:part-2": "node ./2018/solutions/day-3/part-2/part-2.js"
+    "2018:day-3:part-2": "node ./2018/solutions/day-3/part-2/part-2.js",
+    "2018:day-4": "yarn 2018:day-4:part-1 && yarn 2018:day4:part-2",
+    "2018:day-4:part-1": "node ./2018/solutions/day-4/part-1/part-1.js",
+    "2018:day-4:part-2": "node ./2018/solutions/day-4/part-2/part-2.js"
   }
 }
