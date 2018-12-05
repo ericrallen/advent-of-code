@@ -1,10 +1,8 @@
-const Solution = require('../../../utils/solution.class');
-
 const solvePuzzle = require('./part-1.js');
 
 const exampleData = ['dabAcCaCBAcCcaDA'];
 const exampleSolution = 'dabCBAcaDA'.length;
 
-test('it solves the example input', () => {
+test('Solve Day 5 Part 1 with Example Data', () => {
   expect(solvePuzzle(exampleData)).toBe(exampleSolution);
 });

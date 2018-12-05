@@ -27,8 +27,9 @@
     "2018:day-4": "yarn 2018:day-4:part-1 && yarn 2018:day4:part-2",
     "2018:day-4:part-1": "node ./2018/solutions/day-4/part-1/part-1.js",
     "2018:day-4:part-2": "node ./2018/solutions/day-4/part-2/part-2.js",
-    "2018:day-5": "yarn 2018:day-5:part-1",
-    "2018:day-5:part-1": "node ./2018/solutions/day-5/part-1/"
+    "2018:day-5": "yarn 2018:day-5:part-1 && yarn 2018:day-5:part-2",
+    "2018:day-5:part-1": "node ./2018/solutions/day-5/part-1/",
+    "2018:day-5:part-2": "node ./2018/solutions/day-5/part-2/"
   },
   "devDependencies": {
     "jest": "^23.6.0"
