@@ -119,6 +119,22 @@ class Solution {
       fs.writeFileSync(this.inputDataPath, data.join('\n'));
     });
   }
+
+  /**
+   * Solve the puzzle by applying the provided logic to this puzzle's data
+   * @param {Function} solutionLogic function containing the actual logic for solving your puzzle
+   * 
+   * @memberof Solution
+   */
+  solve(solutionLogic) {
+    console.time('Calculating Solution');
+    this.data.then((data) => {
+      const solution = solutionLogic(data);
+
+      console.log('SOLUTION:', solution);
+      console.timeEnd('Calculating Solution');
+    });
+  }
 }
 
 module.exports = Solution;
