@@ -49,27 +49,35 @@ function solvePuzzle(data) {
 
     // TODO: Figure out why we're only getting a few steps in before we lose the other dozen or so steps
 
-    if (step) {
-      const nextSteps = Object.entries(sequence).reduce((steps, [ nextStep, prerequisiteSteps ]) => {
-        if ((prerequisiteSteps.join('') === solution[stepIndex] || prerequisiteSteps.join('') === step)) {
-          steps.push(nextStep);
-        }
+    const nextSteps = Object.entries(sequence).reduce((steps, [ nextStep, prerequisiteSteps ]) => {
+      const prerequisitesComplete = prerequisiteSteps.filter(prerequisiteStep => !stepsToComplete.get(prerequisiteStep)).length === 0;
 
-        return steps.sort();
-      }, []);
-
-      const newSteps = nextSteps.filter(stepId => !stepsToComplete.get(stepId));
-
-      if (newSteps.length) {
-        solution.splice(stepIndex + 1, 0, ...newSteps);
+      if (((prerequisiteSteps.join('') === solution[stepIndex] || prerequisiteSteps.join('') === step) || prerequisitesComplete) && !lastSteps.includes(nextStep) && !firstSteps.includes(nextStep)) {
+        steps.push(nextStep);
       }
 
+      if (prerequisitesComplete) {
+        stepsToComplete.set(nextStep, true);
+      }
+
+      return steps.sort();
+    }, []);
+
+    if (step) {
       stepsToComplete.set(step, true);
     }
+
+    const newSteps = nextSteps.filter((stepToFilter) => !solution.includes(stepToFilter)).sort();
+
+    solution.splice(stepIndex + 1, 0, ...newSteps);
   }
 
   // sort the final steps alphabetically
   solution.push(...(lastSteps.sort()));
+
+  lastSteps.forEach((step) => {
+    stepsToComplete.set(step, true);
+  });
 
   return solution.join('');
 }
