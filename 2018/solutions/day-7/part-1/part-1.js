@@ -1,5 +1,10 @@
 function solvePuzzle(data) {
-  const solution = [];
+  let solution = [];
+
+  const aCharacterCode = 65;
+  const zCharacterCode = 90;
+
+  const prerequisiteObject = new Map();
 
   const stepParsingRegex = /^Step (\w) must be finished before step (\w) can begin.$/;
   const stepsThatArePrerequisites = [];
@@ -10,74 +15,75 @@ function solvePuzzle(data) {
     return [firstStep, secondStep];
   });
 
-  const stepsToComplete = new Map();
+  const partOfProcess = (step, process) => process.some(([ step1, step2 ]) => step1 === step || step2 === step);
 
-  const sequence = stepOrders.reduce((prerequisiteObject, [ subStep1, subStep2 ], id) => {
-    if (!stepsToComplete.get(subStep1)) {
-      stepsToComplete.set(subStep1, false);
+  for (let charCode = aCharacterCode; charCode <= zCharacterCode; charCode++) {
+    const letter = String.fromCharCode(charCode).toUpperCase();
+
+    if (partOfProcess(letter, stepOrders)) {
+      const prereqs = [];
+
+      stepOrders.forEach(([ before, after ]) => {
+        if (!stepsThatArePrerequisites.includes(before)) {
+          stepsThatArePrerequisites.push(before);
+        }
+
+        if (after === letter) {
+          prereqs.push(before);
+        }
+      });
+
+      prerequisiteObject.set(letter, prereqs.sort());
     }
-
-    if (!stepsThatArePrerequisites.includes(subStep1)) {
-      stepsThatArePrerequisites.push(subStep1);
-    }
-
-    if (!stepsToComplete.get(subStep2)) {
-      stepsToComplete.set(subStep2, false);
-    }
-
-    prerequisiteObject[subStep2] = prerequisiteObject[subStep2] || [];
-
-    prerequisiteObject[subStep2].push(subStep1);
-
-    prerequisiteObject[subStep2] = prerequisiteObject[subStep2].sort();
-
-    return prerequisiteObject;
-  }, {});
-
-  // any step without a prerequisite is a first step
-  const firstSteps = Array.from(stepsToComplete).map(([ step ]) => step).filter(step => !Object.keys(sequence).includes(step));
-
-  // any step without any steps that have it as a prerequisite is a last step
-  const lastSteps = Array.from(stepsToComplete).map(([ step ]) => step).filter(step => !stepsThatArePrerequisites.includes(step));
-
-  // sort the first steps alphabetically
-  solution.push(...(firstSteps.sort()));
-
-  for(var stepIndex = 0; stepIndex < stepsToComplete.size; stepIndex++) {
-
-    const step = solution[stepIndex];
-
-    // TODO: Figure out why we're only getting a few steps in before we lose the other dozen or so steps
-
-    const nextSteps = Object.entries(sequence).reduce((steps, [ nextStep, prerequisiteSteps ]) => {
-      const prerequisitesComplete = prerequisiteSteps.filter(prerequisiteStep => !stepsToComplete.get(prerequisiteStep)).length === 0;
-
-      if (((prerequisiteSteps.join('') === solution[stepIndex] || prerequisiteSteps.join('') === step) || prerequisitesComplete) && !lastSteps.includes(nextStep) && !firstSteps.includes(nextStep)) {
-        steps.push(nextStep);
-      }
-
-      if (prerequisitesComplete) {
-        stepsToComplete.set(nextStep, true);
-      }
-
-      return steps.sort();
-    }, []);
-
-    if (step) {
-      stepsToComplete.set(step, true);
-    }
-
-    const newSteps = nextSteps.filter((stepToFilter) => !solution.includes(stepToFilter)).sort();
-
-    solution.splice(stepIndex + 1, 0, ...newSteps);
   }
 
-  // sort the final steps alphabetically
-  solution.push(...(lastSteps.sort()));
+  const firstSteps = Array.from(prerequisiteObject)
+    .filter(([ step, prereqs ]) => !prereqs.length)
+    .map(([ step ]) => step)
+    .sort()
+  ;
 
-  lastSteps.forEach((step) => {
-    stepsToComplete.set(step, true);
-  });
+  const lastSteps = Array.from(prerequisiteObject)
+    .filter(([ step ]) => !stepsThatArePrerequisites.includes(step))
+    .map(([ step ]) => step)
+    .sort()
+  ;
+
+  solution.push(firstSteps.shift());
+
+  const prereqsResolved = (prerequisites, test) => {
+    const unresolved = prerequisites.filter((step) => !test.includes(step));
+
+    return unresolved.length === 0;
+  };
+
+  let stepToCheck = 0;
+
+  while(solution.length < prerequisiteObject.size) {
+    const step = solution[stepToCheck];
+
+    let nextSteps = [];
+
+    Array.from(prerequisiteObject).forEach(([ nextStep, prereqs ]) => {
+      if (step !== nextStep && !solution.includes(nextStep) && !firstSteps.includes(nextStep) && !lastSteps.includes(nextStep)) {
+        if (prereqsResolved(prereqs, solution)) {
+          nextSteps.push(nextStep);
+        }
+      }
+    });
+
+    if (firstSteps.length) {
+      nextSteps.push(firstSteps.shift());
+    }
+
+    solution.splice(stepToCheck + 1, 0, nextSteps.sort().shift());
+
+    stepToCheck++;
+  }
+
+  if (lastSteps.length) {
+    solution.push(...lastSteps);
+  }
 
   return solution.join('');
 }
