@@ -12,23 +12,33 @@ class Node {
   }
 }
 
-// TODO: recurse through license stringa and pull out headers; use header to recursively
-//        find children and meta data; build tree of nodes and children; reduce tree to
-//        summed metadata of all tree members
-
 function solvePuzzle(data) {
   const headerLength = 2;
 
   let license = data[0].split(' ');
 
-  const sumMetadata = (tree) => {
-    const rootMetadataValue = tree.metadata.reduce((rootMetadata, datum) => rootMetadata + datum, 0);
+  const sumMetadata = (tree, exists = false) => {
+    let metadataTotal = 0;
 
-    const childrenMetadataValue = tree.children.reduce((childMetadata, datum) => childMetadata + sumMetadata(datum), 0);
+    if (tree.metadata) {
+      metadataTotal = tree.metadata.reduce((childMetadata, datum) => {
+        if (tree.children.length) {
+          const child = tree.children[datum - 1];
 
-    const totalMetadataValue = rootMetadataValue + childrenMetadataValue;
+          if (child) {
+            childMetadata = childMetadata + sumMetadata(child, true)
+          }
+        } else {
+          if (exists) {
+            childMetadata = tree.metadata.reduce((thisMetadataTotal, datum) => thisMetadataTotal + datum, 0);
+          }
+        }
 
-    return totalMetadataValue;
+        return childMetadata;
+      }, 0);
+    }
+
+    return metadataTotal;
   };
 
   const generateTree = (licenseData, parent) => {
@@ -37,8 +47,6 @@ function solvePuzzle(data) {
     let metadata = [];
     let children = [];
     let id = shortId.generate();
-
-    let node;
 
     for (let headerIndex = 0; headerIndex < headerLength; headerIndex++) {
       header.push(parseInt(licenseData.shift(), 10));
