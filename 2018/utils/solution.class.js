@@ -126,14 +126,22 @@ class Solution {
    * 
    * @memberof Solution
    */
-  solve(solutionLogic) {
+  solve(solutionLogic, useThisData = null) {
     console.time('Calculating Solution');
-    this.data.then((data) => {
-      const solution = solutionLogic(data);
+
+    if (useThisData) {
+      const solution = solutionLogic(useThisData);
 
       console.log('SOLUTION:', solution);
       console.timeEnd('Calculating Solution');
-    });
+    } else {
+      this.data.then((data) => {
+        const solution = solutionLogic(data);
+
+        console.log('SOLUTION:', solution);
+        console.timeEnd('Calculating Solution');
+      });
+    }
   }
 }
 
