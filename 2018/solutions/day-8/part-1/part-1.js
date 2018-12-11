@@ -12,10 +12,6 @@ class Node {
   }
 }
 
-// TODO: recurse through license stringa and pull out headers; use header to recursively
-//        find children and meta data; build tree of nodes and children; reduce tree to
-//        summed metadata of all tree members
-
 function solvePuzzle(data) {
   const headerLength = 2;
 
