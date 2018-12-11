@@ -11,7 +11,8 @@
     "axios": "^0.18.0",
     "dotenv": "^6.1.0",
     "luxon": "^1.8.2",
-    "shortid": "^2.2.14"
+    "shortid": "^2.2.14",
+    "single-line-log": "^1.1.2"
   },
   "devDependencies": {
     "jest": "^23.6.0"

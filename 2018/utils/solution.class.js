@@ -126,17 +126,17 @@ class Solution {
    * 
    * @memberof Solution
    */
-  solve(solutionLogic, useThisData = null) {
+  solve(solutionLogic, useThisData = null, ...otherOptions) {
     console.time('Calculating Solution');
 
     if (useThisData) {
-      const solution = solutionLogic(useThisData);
+      const solution = solutionLogic(useThisData, ...otherOptions);
 
       console.log('SOLUTION:', solution);
       console.timeEnd('Calculating Solution');
     } else {
       this.data.then((data) => {
-        const solution = solutionLogic(data);
+        const solution = solutionLogic(data, ...otherOptions);
 
         console.log('SOLUTION:', solution);
         console.timeEnd('Calculating Solution');
