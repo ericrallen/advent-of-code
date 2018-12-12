@@ -18,11 +18,11 @@ const exampleSolution = [
   37305
 ];
 
-test('Solve Day 8 Part 1 with Example Data', () => {
+test('Solve Day 9 Part 1 with Example Data', () => {
   expect(solvePuzzle(exampleData[0])).toBe(exampleSolution[0]);
 });
 
-test('Solve Day 8 Part 1 with even more Example Data', () => {
+test('Solve Day 9 Part 1 with even more Example Data', () => {
   expect(solvePuzzle(exampleData[1])).toBe(exampleSolution[1]);
   expect(solvePuzzle(exampleData[2])).toBe(exampleSolution[2]);
   //expect(solvePuzzle(exampleData[3])).toBe(exampleSolution[3]); // this test case fails for some reason?

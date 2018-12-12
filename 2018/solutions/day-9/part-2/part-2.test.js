@@ -18,6 +18,6 @@ const exampleSolution = [
   37305
 ];
 
-test('Solve Day 8 Part 1 with Example Data', () => {
+test('Solve Day 9 Part 1 with Example Data', () => {
   expect(solvePuzzle(exampleData[0], true)).toBe(exampleSolution[0]);
 });

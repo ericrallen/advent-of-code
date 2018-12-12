@@ -15,7 +15,7 @@ class Solution {
    * @param {Number} options.day which Advent of Code day is this puzzle for
    * @param {Number} options.part which part of the day's puzzle are we solving
    */
-  constructor({ inputPath = '../inputs', day = 0, part = 0, year = 0 }) {
+  constructor({ inputPath = '../inputs', day = 0, part = 0, year = 0, download = true }) {
     this.inputArray = [];
 
     // if we don't know what day it is, we're not going to really have anything useful we can do
@@ -40,7 +40,7 @@ class Solution {
         this.inputArray = this.readLocalInput();
       } else {
         // if we have our session cookie in the .env file
-        if (process.env.SESSION) {
+        if (process.env.SESSION && download) {
           this.inputArray = this.requestInputData();
 
           this.writeInputFile();
