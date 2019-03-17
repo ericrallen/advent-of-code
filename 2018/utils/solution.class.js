@@ -91,7 +91,7 @@ class Solution {
     })
       // retrieve data and split into Array
       .then(({ data }) => {
-        return data.trim().split('\n');
+        return data.split('\n');
       })
       // fallback to local filesystem on error
       .catch((error) => {
