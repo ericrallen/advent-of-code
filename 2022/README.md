@@ -15,14 +15,25 @@ cargo run -- $day $part
 
 ### Testing
 
-To run the solution with the example data you can provide the test flag as the first parameter:
+To run the solution with the example data and `assert!()` that it matches the example solution, you can enable the `test` feature:
 
 ```sh
 # this will test the Day 1 Part 2 solution with the example input
-cargo run -- test 1 2
+cargo run --features test 1 2
 ```
 
-**TODO**: Integrate the testing better and have it use the [`assert!()` macro](https://doc.rust-lang.org/std/macro.assert.html) to test against the example solution.
+**Note**: This feature makes use of the `/inputs/day-{N}.test` files for problem inputs and the `/tests/day-{N}-part-{N}.solutions` files for expected solution values.
+
+### Logging
+
+To run the solution with verbose logging you can enable the `verbose` feature:
+
+```sh
+# this will run the Day 1 Part 2 solution with verbose logging enabled
+cargo run --features verbose 1 2
+```
+
+**Note**: This can be useful for debugging purposes.
 
 ## Input Data
 
