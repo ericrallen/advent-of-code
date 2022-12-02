@@ -21,7 +21,7 @@ fn part_one(input: String) -> String {
     }
   }
 
-  return format!("The elf with the most calories has:\n{}", most_calories);
+  return format!("{}", most_calories);
 }
 
 
@@ -34,7 +34,7 @@ fn part_two(input: String) -> String {
 
   let top_calories: i32 = total_calories.iter().take(NUMBER_OF_ELVES_TO_RETURN).sum();
 
-  return format!("The {} elves with the most calories have\n{:?}", NUMBER_OF_ELVES_TO_RETURN, top_calories);
+  return format!("{}", top_calories);
 }
 
 
