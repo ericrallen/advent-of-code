@@ -1,7 +1,7 @@
 {
-  "name": "advent-of-code",
+  "name": "advent-of-code-2018",
   "version": "1.0.0",
-  "description": "Advent of Code solutions",
+  "description": "Advent of Code solutions for 2018",
   "main": "index.js",
   "repository": "git@github.com:ericrallen/advent-of-code.git",
   "author": "Eric Allen <decoy@internetalche.me>",
