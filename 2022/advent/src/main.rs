@@ -77,12 +77,17 @@ fn main() {
 }
 
 fn read_input(day: &str, is_test: bool) -> String {
+    let file_directory = match is_test {
+        true => "tests",
+        _ => "inputs"
+    };
+
     let file_extension = match is_test {
-        true => "test",
+        true => "test.dat",
         _ => "dat"
     };
 
-    let file_path = format!("../inputs/day-{}.{}", day, file_extension);
+    let file_path = format!("../{}/day-{}.{}", file_directory, day, file_extension);
 
     log!("In file {}", file_path);
 
