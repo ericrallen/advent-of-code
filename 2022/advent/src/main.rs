@@ -21,6 +21,8 @@ macro_rules! log {
 }
 
 #[path = "./days/days.rs"] mod days;
+#[path = "./utils/file.rs"] mod file;
+
 
 static DEFAULT_DAY: &'static str = "1";
 static DEFAULT_PART: &'static str = "1";
