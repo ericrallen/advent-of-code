@@ -8,6 +8,8 @@ fn check_for_unique_sequence(sequence: &str, size: usize) -> bool {
 
   log!("{:?}", sequence_array.join());
 
+  // `.dedup()` only removes consecutive duplicates
+  // so it needs a sorted Vector for our use case
   sequence_array.sort();
   sequence_array.dedup();
 
@@ -15,6 +17,8 @@ fn check_for_unique_sequence(sequence: &str, size: usize) -> bool {
 }
 
 fn get_sequence(stream: &String, start: usize, end: usize) -> Option<&str> {
+  // this could have just been a regular `.get()` call in the code below
+  // but having the index math in the Range was hard to read
   stream.get(start..end)
 }
 
