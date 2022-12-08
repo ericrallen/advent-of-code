@@ -15,9 +15,7 @@ fn check_for_unique_sequence(sequence: &str, size: usize) -> bool {
 }
 
 fn get_sequence(stream: &String, start: usize, end: usize) -> Option<&str> {
-  let sequence = stream.get(start..end);
-
-  return sequence
+  stream.get(start..end)
 }
 
 fn find_end_of_sequence(stream: &String, length: usize) -> usize {
