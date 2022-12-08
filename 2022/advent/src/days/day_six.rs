@@ -14,8 +14,8 @@ fn check_for_unique_sequence(sequence: &str, size: usize) -> bool {
   sequence_array.len() == size
 }
 
-fn get_sequence(stream: &String, start: usize, size: usize) -> Option<&str> {
-  let sequence = stream.get(start..size);
+fn get_sequence(stream: &String, start: usize, end: usize) -> Option<&str> {
+  let sequence = stream.get(start..end);
 
   return sequence
 }
