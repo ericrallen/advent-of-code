@@ -11,7 +11,7 @@ use std::fs;
 // The debug version
 #[cfg(feature = "verbose")]
 macro_rules! log {
-  ($( $args:expr ),*) => { println!( $( $args ),* ); }
+  ($( $args:expr ),*) => { println!( $( $args ),* ) }
 }
 
 // Non-debug version
@@ -24,10 +24,10 @@ macro_rules! log {
 #[path = "./utils/file.rs"] mod file;
 
 
-static DEFAULT_DAY: &'static str = "1";
-static DEFAULT_PART: &'static str = "1";
+static DEFAULT_DAY: &str = "1";
+static DEFAULT_PART: &str = "1";
 
-const PART_TWO_INDICATOR: &'static str = "2";
+const PART_TWO_INDICATOR: &str = "2";
 
 #[cfg(feature = "test")]
 const TEST_FLAG: bool = true;
@@ -44,7 +44,7 @@ fn main() {
 
   log!("Testing: {}", TEST_FLAG);
 
-  let day = if actual_args.len() > 0 {
+  let day = if !actual_args.is_empty() {
     &actual_args[0]
   } else {
     DEFAULT_DAY
@@ -96,7 +96,7 @@ fn read_input(day: &str, is_test: bool) -> String {
   let contents = fs::read_to_string(file_path)
     .expect("Should have been able to read the file").trim().to_string();
 
-  return contents;
+  contents
 }
 
 fn read_solution(day: &str, part: &str) -> String {
@@ -107,5 +107,5 @@ fn read_solution(day: &str, part: &str) -> String {
   let contents = fs::read_to_string(file_path)
     .expect("Should have been able to read the file").trim().to_string();
 
-  return contents;
+  contents
 }

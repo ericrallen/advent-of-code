@@ -10,7 +10,7 @@ fn parse_instruction(instruction: &str) -> (i32, i32, i32) {
 
   let caps = parser.captures(&instruction).unwrap();
 
-  return (caps["number_of_crates"].parse().unwrap(), caps["from_stack"].parse().unwrap(), caps["to_stack"].parse().unwrap());
+  (caps["number_of_crates"].parse().unwrap(), caps["from_stack"].parse().unwrap(), caps["to_stack"].parse().unwrap())
 }
 
 fn part_one(input: String) -> String {
@@ -86,7 +86,7 @@ fn part_one(input: String) -> String {
   .filter(|x| x.ne(&EMPTY_SPOT.to_string()))
   .collect();
 
-  return format!("{}", top_crates.join(""));
+  format!("{}", top_crates.join(""))
 }
 
 
@@ -173,13 +173,13 @@ fn part_two(input: String) -> String {
   .filter(|x| x.ne(&EMPTY_SPOT.to_string()))
   .collect();
 
-  return format!("{}", top_crates.join(""));
+  format!("{}", top_crates.join(""))
 }
 
 
 pub fn main(input: String, part: &str) -> String {
   match part {
-    PART_TWO_INDICATOR => return part_two(input),
-    _ => return part_one(input)
+    PART_TWO_INDICATOR => part_two(input),
+    _ => part_one(input)
   }
 }
