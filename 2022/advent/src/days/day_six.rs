@@ -6,8 +6,6 @@ const MESSAGE_BUFFER_LENGTH: usize = 14;
 fn check_for_unique_sequence(sequence: &str, size: usize) -> bool {
   let mut sequence_array: Vec<char> = sequence.chars().collect();
 
-  log!("{:?}", sequence_array.join());
-
   // `.dedup()` only removes consecutive duplicates
   // so it needs a sorted Vector for our use case
   sequence_array.sort();
